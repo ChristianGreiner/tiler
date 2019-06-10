@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.645
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tiler", "Tiler\Tiler.csproj", "{EFFEDCF3-AB8F-4FCA-8E4E-C2DCE1A5B14F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EFFEDCF3-AB8F-4FCA-8E4E-C2DCE1A5B14F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFFEDCF3-AB8F-4FCA-8E4E-C2DCE1A5B14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFFEDCF3-AB8F-4FCA-8E4E-C2DCE1A5B14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFFEDCF3-AB8F-4FCA-8E4E-C2DCE1A5B14F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {960AEAA8-7111-4A45-8C50-1FB42DE5B9A7}
+	EndGlobalSection
+EndGlobal
