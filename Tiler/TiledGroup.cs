@@ -1,6 +1,4 @@
-﻿using Duality;
-
-namespace Tiler
+﻿namespace Tiler
 {
 	public class TiledGroup
 	{
@@ -15,9 +13,14 @@ namespace Tiler
 		public string Name { get; set; }
 
 		/// <summary>
-		/// Rendering offset of the group layer in pixels.
+		/// Rendering offset x for this layer in pixels.
 		/// </summary>
-		public Point2 Offset { get; set; }
+		public int OffsetX { get; set; }
+
+		/// <summary>
+		/// Rendering offset y for this layer in pixels.
+		/// </summary>
+		public int OffsetY { get; set; }
 
 		/// <summary>
 		/// The opacity of the layer as a value from 0 to 1. Defaults to 1.

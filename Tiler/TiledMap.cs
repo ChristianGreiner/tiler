@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using Duality;
-using Duality.Drawing;
 
 namespace Tiler
 {
@@ -12,19 +10,29 @@ namespace Tiler
 		public string Version { get; set; }
 
 		/// <summary>
-		/// The map width and height in tiles.
+		/// The width of a tile.
 		/// </summary>
-		public Point2 Size { get; set; }
+		private int TileWidth { get; set; }
 
 		/// <summary>
-		/// The width and height of a tile.
+		/// The height of a tile.
 		/// </summary>
-		public Point2 TileSize { get; set; }
+		private int TileHeight { get; set; }
+
+		/// <summary>
+		/// The width of the map in tiles.
+		/// </summary>
+		private int Width { get; set; }
+
+		/// <summary>
+		/// The height of the map in tiles.
+		/// </summary>
+		private int Height { get; set; }
 
 		/// <summary>
 		/// The background color of the map.
 		/// </summary>
-		public ColorRgba BackgroundColor { get; set; }
+		public string BackgroundColor { get; set; }
 
 		/// <summary>
 		/// Stores the next available ID for new objects. This number is stored to prevent reuse of the same ID after objects have been removed.

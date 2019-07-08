@@ -1,6 +1,4 @@
-﻿using Duality;
-
-namespace Tiler
+﻿namespace Tiler
 {
 	public class TiledGrid
 	{
@@ -10,8 +8,13 @@ namespace Tiler
 		public TiledOrientation Orientation { get; set; }
 
 		/// <summary>
-		/// The size of a grid cell
+		/// The width of a grid cell
 		/// </summary>
-		public Point2 Size { get; set; }
+		public int Width { get; set; }
+
+		/// <summary>
+		/// The height of a grid cell
+		/// </summary>
+		public int Height { get; set; }
 	}
 }

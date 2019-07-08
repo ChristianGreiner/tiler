@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Duality;
 
 namespace Tiler
 {
@@ -16,29 +15,44 @@ namespace Tiler
 		string Name { get; set; }
 
 		/// <summary>
-		/// The x and y coordinate of the layer in tiles.
+		/// The y coordinate of the layer in tiles.
 		/// </summary>
-		Point2 Position { get; set; }
+		int X { get; set; }
 
 		/// <summary>
-		/// The width  and height of the layer in tiles.
+		/// The x coordinate of the layer in tiles.
 		/// </summary>
-		Point2 Size { get; set; }
+		int Y { get; set; }
 
 		/// <summary>
-		/// The opacity of the layer as a value from 0 to 1. Defaults to 1.
+		/// The width of the layer in tiles.
+		/// </summary>
+		int Width { get; set; }
+
+		/// <summary>
+		/// The height of the layer in tiles.
+		/// </summary>
+		int Height { get; set; }
+
+		/// <summary>
+		/// The opacity of the layer as a value from 0 to 1.
 		/// </summary>
 		float Opacity { get; set; }
 
 		/// <summary>
-		/// Whether the layer is shown (1) or hidden (0). Defaults to 1.
+		/// Whether the layer is shown (1) or hidden (0).
 		/// </summary>
 		bool Visible { get; set; }
 
 		/// <summary>
-		/// Rendering offset for this layer in pixels. Defaults to 0.
+		/// Rendering offset x for this layer in pixels.
 		/// </summary>
-		Point2 Offset { get; set; }
+		int OffsetX { get; set; }
+
+		/// <summary>
+		/// Rendering offset y for this layer in pixels.
+		/// </summary>
+		int OffsetY { get; set; }
 
 		/// <summary>
 		/// The properties of the layer.

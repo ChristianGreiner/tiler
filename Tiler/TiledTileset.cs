@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Duality;
 
 namespace Tiler
 {
@@ -16,9 +15,14 @@ namespace Tiler
 		public string Name { get; set; }
 
 		/// <summary>
-		/// The (maximum) width and height of the tiles in this tileset.
+		/// The (maximum) width of the tiles in this tileset.
 		/// </summary>
-		public Point2 TileSize { get; set; }
+		public int TileWidth { get; set; }
+
+		/// <summary>
+		/// The (maximum) height of the tiles in this tileset.
+		/// </summary>
+		public int TileHeight { get; set; }
 
 		/// <summary>
 		/// The spacing in pixels between the tiles in this tileset (applies to the tileset image).
@@ -43,7 +47,7 @@ namespace Tiler
 		/// <summary>
 		/// This element is used to specify an offset in pixels, to be applied when drawing a tile from the related tileset. When not present, no offset is applied.
 		/// </summary>
-		public Point2 Tileoffset { get; set; }
+		public Point TileOffset { get; set; }
 
 		/// <summary>
 		/// The properties of the tileset.

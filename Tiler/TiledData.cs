@@ -1,6 +1,4 @@
-﻿using Duality;
-
-namespace Tiler
+﻿namespace Tiler
 {
 	public class TiledData
 	{
