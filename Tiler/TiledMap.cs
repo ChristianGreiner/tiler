@@ -10,24 +10,29 @@ namespace Tiler
 		public string Version { get; set; }
 
 		/// <summary>
+		/// The tiled version of the map.
+		/// </summary>
+		public string TiledVersion { get; set; }
+
+		/// <summary>
 		/// The width of a tile.
 		/// </summary>
-		private int TileWidth { get; set; }
+		public int TileWidth { get; set; }
 
 		/// <summary>
 		/// The height of a tile.
 		/// </summary>
-		private int TileHeight { get; set; }
+		public int TileHeight { get; set; }
 
 		/// <summary>
 		/// The width of the map in tiles.
 		/// </summary>
-		private int Width { get; set; }
+		public int Width { get; set; }
 
 		/// <summary>
 		/// The height of the map in tiles.
 		/// </summary>
-		private int Height { get; set; }
+		public int Height { get; set; }
 
 		/// <summary>
 		/// The background color of the map.
@@ -85,6 +90,11 @@ namespace Tiler
 			Version = "1.0";
 			Orientation = TiledOrientation.Orthogonal;
 			Renderorder = TiledRenderorder.RightDown;
+		}
+
+		public override string ToString()
+		{
+			return "Version: " + this.Version + "\n";
 		}
 	}
 }
