@@ -15,7 +15,7 @@
 		/// <summary>
 		/// All ids of tiles stored in a grid.
 		/// </summary>
-		public uint[][] Tiles { get; set; }
+		public uint[] Tiles { get; set; }
 
 		public TiledData()
 		{

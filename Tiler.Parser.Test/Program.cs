@@ -1,6 +1,5 @@
 ﻿using System;
-using System.IO;
-using System.Text;
+using System.ComponentModel;
 
 namespace Tiler.Parser.Test
 {
@@ -8,11 +7,29 @@ namespace Tiler.Parser.Test
 	{
 		private static void Main(string[] args)
 		{
-			var data = File.ReadAllText("map01.tmx", Encoding.UTF8);
-			var parser = new TmxParser(data);
-			parser.Parse();
+			var parser = new TmxParser("map01.tmx");
+			var map = parser.ParseMap();
+
+			//PrintR(map);
+
+			Console.WriteLine("===== TILESETS ======");
+
+			foreach(var tileset in map.Tilesets)
+			{
+				//PrintR(tileset);
+			}
 
 			Console.ReadKey();
+		}
+
+		public static void PrintR(Object obj)
+		{
+			foreach (PropertyDescriptor descriptor in TypeDescriptor.GetProperties(obj))
+			{
+				string name = descriptor.Name;
+				object value = descriptor.GetValue(obj);
+				Console.WriteLine("{0}: {1}", name, value);
+			}
 		}
 	}
 }

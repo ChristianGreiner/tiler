@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 
@@ -7,14 +8,16 @@ namespace Tiler.Parser
 {
 	public class TmxParser : ITilerParser<XmlElement>
 	{
+		private readonly string tmxPath;
 		private readonly string rawData;
 
-		public TmxParser(string rawData)
+		public TmxParser(string tmxPath)
 		{
-			this.rawData = rawData;
+			this.tmxPath = tmxPath;
+			this.rawData = File.ReadAllText(tmxPath);
 		}
 
-		public void Parse()
+		public TiledMap ParseMap()
 		{
 			if (!string.IsNullOrEmpty(this.rawData))
 			{
@@ -34,11 +37,14 @@ namespace Tiler.Parser
 
 				// Tile Size
 				map.TileWidth = GetValueFromAttribute<int>(xmlMap, "tilewidth");
-				map.TileWidth = GetValueFromAttribute<int>(xmlMap, "tileheight");
+				map.TileHeight = GetValueFromAttribute<int>(xmlMap, "tileheight");
 
 				// Next Ids
 				map.NextLayerId = GetValueFromAttribute<int>(xmlMap, "nextlayerid");
 				map.NextObjectId = GetValueFromAttribute<int>(xmlMap, "nextobjectid");
+
+				map.BackgroundColor = GetValueFromAttribute<string>(xmlMap, "backgroundcolor");
+
 
 				var renderorder = GetValueFromAttribute<string>(xmlMap, "renderorder");
 				switch (renderorder)
@@ -66,17 +72,82 @@ namespace Tiler.Parser
 
 				map.Tilesets = ParseTilesets(xmlMap);
 
-				Console.WriteLine();
+				map.Layer = ParseTiledLayer(xmlMap);
+
+				map.ObjectGroups = ParseObjectGroups(xmlMap);
+
+				return map;
 			}
+
+			return null;
 		}
 
-		private T GetValueFromAttribute<T>(XmlNode element, string attribute)
+		public List<ITiledLayer> ParseObjectGroups(XmlElement data)
 		{
-			if (element.Attributes == null) return default(T);
-			var result = element?.Attributes[attribute];
-			if (result != null)
-				return (T)Convert.ChangeType(result.Value, typeof(T));
-			return default(T);
+			var objectGroups = new List<ITiledLayer>();
+			if(data != null)
+			{
+				var xmlObjectGroups = data.GetElementsByTagName("objectgroup");
+
+				foreach(XmlElement xmlObjectGroup in xmlObjectGroups)
+				{
+					var group = new TiledObjectGroup();
+					group.Objects = new List<TiledObject>();
+
+					ParseDefaultLayerAttributes(xmlObjectGroup, group);
+
+					// parse objects
+					var objectElements = data.GetElementsByTagName("object");
+					if (objectElements != null && objectElements.Count > 0)
+					{
+						foreach (XmlElement xmlObjectElement in objectElements)
+						{
+							var obj = ParseTiledObject(xmlObjectElement);
+							if (obj != null)
+								group.Objects.Add(obj);
+						}
+					}
+
+					objectGroups.Add(group);
+				}
+			}
+			return objectGroups;
+		}
+
+		public TiledObject ParseTiledObject(XmlElement data)
+		{
+			TiledObject tiledObj = null;
+
+			if(data.HasChildNodes)
+			{
+				// check if object is a polygon
+				var polygonElement = data.GetElementsByTagName("polygon");
+				if (polygonElement != null && polygonElement.Count > 0)
+				{
+				}
+
+				var ellipseElement = data.GetElementsByTagName("ellipse");
+				if (ellipseElement != null && ellipseElement.Count > 0)
+				{
+					tiledObj = new TiledEllipse();
+				}
+			} else
+			{
+				tiledObj = new TiledObject();
+			}
+
+			if (tiledObj != null)
+			{
+				tiledObj.Id = GetValueFromAttribute<uint>(data, "id");
+				tiledObj.Name = GetValueFromAttribute<string>(data, "name");
+				tiledObj.Type = GetValueFromAttribute<string>(data, "type");
+				tiledObj.Width = GetValueFromAttribute<float>(data, "width");
+				tiledObj.Height = GetValueFromAttribute<float>(data, "height");
+				tiledObj.X = GetValueFromAttribute<float>(data, "x");
+				tiledObj.Y = GetValueFromAttribute<float>(data, "y");
+			}
+
+			return tiledObj;
 		}
 
 		public List<TiledTileset> ParseTilesets(XmlElement data)
@@ -94,6 +165,50 @@ namespace Tiler.Parser
 					tileset.FirstGid = GetValueFromAttribute<int>(element, "firstgid");
 					tileset.Source = GetValueFromAttribute<string>(element, "source");
 
+					var xmlTileset = LoadData(tileset.Source);
+
+					// Offset
+					var xmlOffset = xmlTileset.GetElementsByTagName("tileoffset");
+					if(xmlOffset != null)
+					{
+						var offset = new Point();
+						offset.X = GetValueFromAttribute<int>((XmlElement)xmlOffset[0], "x");
+						offset.Y = GetValueFromAttribute<int>((XmlElement)xmlOffset[0], "y");
+						tileset.TileOffset = offset;
+					}
+
+					tileset.Properties = ParseProperties(xmlTileset);
+					tileset.Version = GetValueFromAttribute<string>(xmlTileset, "version");
+					tileset.TiledVersion = GetValueFromAttribute<string>(xmlTileset, "tiledversion");
+
+					tileset.Name = GetValueFromAttribute<string>(xmlTileset, "name");
+
+					tileset.TileWidth = GetValueFromAttribute<int>(xmlTileset, "tilewidth");
+					tileset.TileHeight = GetValueFromAttribute<int>(xmlTileset, "tileheight");
+
+					tileset.TileCount = GetValueFromAttribute<int>(xmlTileset, "tilecount");
+					tileset.Columns = GetValueFromAttribute<int>(xmlTileset, "columns");
+
+					tileset.BackgroundColor = GetValueFromAttribute<string>(xmlTileset, "backgroundcolor");
+
+					// Parse Images
+					var xmlImage = xmlTileset.GetElementsByTagName("image")[0];
+					tileset.Image = new TiledImage();
+					tileset.Image.Source = GetValueFromAttribute<string>(xmlImage, "source");
+					tileset.Image.Width = GetValueFromAttribute<int>(xmlImage, "width");
+					tileset.Image.Height = GetValueFromAttribute<int>(xmlImage, "height");
+					tileset.Image.Data = File.ReadAllBytes(tileset.Image.Source);
+
+					// Parse Tile
+					tileset.Tiles = new List<TiledTile>();
+					var xmlTiles = xmlTileset.GetElementsByTagName("tile");
+					foreach(XmlElement xmlTile in xmlTiles)
+					{
+						var tileId = GetValueFromAttribute<int>(xmlTile, "id");
+						var tileProperties = ParseProperties(xmlTile);
+						tileset.Tiles.Add(new TiledTile(tileId, tileProperties));
+					}
+
 					tilesets.Add(tileset);
 				}
 			}
@@ -101,56 +216,81 @@ namespace Tiler.Parser
 			return tilesets;
 		}
 
-		public List<ITiledLayer> ParseLayers(XmlElement data)
+		public List<ITiledLayer> ParseTiledLayer(XmlElement data)
 		{
-			List<ITiledLayer> layerList = new List<ITiledLayer>();
-
-			foreach (var child in data.Children)
+			if (data != null)
 			{
-				// check if layer are stored in a group
-				if (child.TagName.Equals("group"))
+				var layerList = new List<ITiledLayer>();
+				var xmlLayerList = data.GetElementsByTagName("layer");
+				foreach (XmlElement xmlLayer in xmlLayerList)
 				{
-					foreach (var groupElement in child.Children)
+					var layer = new TiledLayer();
+					layer.Id = GetValueFromAttribute<int>(xmlLayer, "id");
+
+					ParseDefaultLayerAttributes(xmlLayer, layer);
+
+					// parse data
+					var xmlLayerData = xmlLayer.GetElementsByTagName("data");
+					if(xmlLayerData != null)
 					{
-						var groupLayer = ParseLayer(groupElement);
-						if (groupLayer != null)
-							layerList.Add(groupLayer);
+						layer.Data = EncodeData((XmlElement)xmlLayerData[0], new Point(layer.Width, layer.Height));
 					}
+
+
+					layerList.Add(layer);
 				}
 
-				var layer = ParseLayer(child);
-				if (layer != null)
-					layerList.Add(layer);
+				return layerList;
+			}
+			return null;
+		}
+
+		public TiledData EncodeData(XmlElement data, Point gridSize)
+		{
+			var encoding = GetValueFromAttribute<string>(data, "encoding");
+			var compression = GetValueFromAttribute<string>(data, "compression");
+			var tiledEncoding = TiledEncoding.Base64;
+			var tiledCompression = TiledCompression.None;
+			var idList = new List<uint>();
+
+			switch (encoding)
+			{
+				// xml encoding
+				case null:
+					tiledEncoding = TiledEncoding.Xml;
+					foreach (XmlElement child in data.ChildNodes)
+					{
+						if(child.Name.Equals("title"))
+							idList.Add(GetValueFromAttribute<uint>(child, "gid"));
+					}
+
+					break;
+
+				case "csv":
+					tiledEncoding = TiledEncoding.Csv;
+					idList.AddRange(data.InnerText.Split(',').Select(uint.Parse));
+					break;
+
+				case "base64":
+					tiledEncoding = TiledEncoding.Base64;
+					break;
 			}
 
-			return layerList;
+			return new TiledData()
+			{
+				Compression = tiledCompression,
+				Encoding = tiledEncoding,
+				Tiles = idList.ToArray()
+			};
 		}
 
-		/// <summary>
-		/// Parse a single layer with tile data.
-		/// </summary>
-		/// <param name="data">The xml element.</param>
-		/// <returns>The layer.</returns>
-		public TiledLayer ParseTiledLayer(XmlElement data)
-		{
-			var layer = new TiledLayer();
-
-			ParseDefaultLayerAttributes(data, layer);
-
-			// layer data
-			var dataElement = data.GetElementsByTagName("data").FirstOrDefault();
-			if (dataElement != null)
-				layer.Data = EncodeData(dataElement, layer.Size);
-
-			return layer;
-		}
 
 		public List<TiledProperty> ParseProperties(XmlElement data)
 		{
 			if (data != null)
 			{
 				var properties = new List<TiledProperty>();
-				foreach (XmlElement property in data.ChildNodes)
+				foreach (XmlElement property in data.FirstChild.ChildNodes)
 				{
 					var xmlName = GetValueFromAttribute<string>(property, "name");
 					var xmlTypeName = GetValueFromAttribute<string>(property, "type");
@@ -202,6 +342,23 @@ namespace Tiler.Parser
 			return null;
 		}
 
+		public XmlElement LoadData(string path)
+		{
+			var xmlDoc = new XmlDocument();
+			var xmlData = File.ReadAllText(path);
+			xmlDoc.LoadXml(xmlData);
+			return xmlDoc.DocumentElement;
+		}
+
+		private T GetValueFromAttribute<T>(XmlNode element, string attribute)
+		{
+			if (element.Attributes == null) return default(T);
+			var result = element?.Attributes[attribute];
+			if (result != null)
+				return (T)Convert.ChangeType(result.Value, typeof(T));
+			return default(T);
+		}
+
 		private void ParseDefaultLayerAttributes(XmlElement xmlElement, ITiledLayer layer)
 		{
 			// name
@@ -222,5 +379,6 @@ namespace Tiler.Parser
 
 			// properties
 		}
+
 	}
 }

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.2" tiledversion="1.2.4" name="Overworld" tilewidth="16" tileheight="16" tilecount="1440" columns="40">
- <image source="../Projekte/Duality/Assets/Tilesets/zelda like/Overworld.png" width="640" height="576"/>
+<tileset version="1.2" tiledversion="1.2.4" name="Overworld" tilewidth="16" tileheight="16" tilecount="1440" columns="40" backgroundcolor="#000000">
+ <tileoffset x="2" y="1"/>
+ <properties>
+  <property name="Test" value="test"/>
+ </properties>
+ <image source="Overworld.png" width="640" height="576"/>
  <tile id="44">
   <properties>
    <property name="collision" type="bool" value="true"/>

@@ -6,6 +6,6 @@ namespace Tiler.Parser
 	{
 		List<TiledTileset> ParseTilesets(T data);
 
-		List<ITiledLayer> ParseLayers(T data);
+		T LoadData(string path);
 	}
 }

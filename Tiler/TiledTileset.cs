@@ -10,6 +10,16 @@ namespace Tiler
 		public int FirstGid { get; set; }
 
 		/// <summary>
+		/// The version of the map.
+		/// </summary>
+		public string Version { get; set; }
+
+		/// <summary>
+		/// The tiled version of the map.
+		/// </summary>
+		public string TiledVersion { get; set; }
+
+		/// <summary>
 		/// The name of this tileset.
 		/// </summary>
 		public string Name { get; set; }
@@ -59,6 +69,18 @@ namespace Tiler
 		/// </summary>
 		public string Source { get; set; }
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public string BackgroundColor { get; set; }
+
+		public TiledImage Image { get; set; }
+
+		public List<TiledTile> Tiles { get; set; }
+
+		public Dictionary<int, IReadOnlyList<TiledProperty>> TiledTilesProperties;
+
 		// TODO: Image, Terraintypes, Tile
+
 	}
 }

@@ -50,8 +50,8 @@
     <Reference Include="Aga.Controls, Version=1.7.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AdamsLair.TreeViewAdv.1.7.7\lib\net20\Aga.Controls.dll</HintPath>
     </Reference>
-    <Reference Include="Duality, Version=3.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\AdamsLair.Duality.3.0.3\lib\portable45-net45+win8+wpa81\Duality.dll</HintPath>
+    <Reference Include="Duality, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\AdamsLair.Duality.3.1.2\lib\portable45-net45+win8+wpa81\Duality.dll</HintPath>
     </Reference>
     <Reference Include="DualityEditor, Version=3.1.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AdamsLair.Duality.Editor.3.1.2\lib\net45\DualityEditor.exe</HintPath>
@@ -62,8 +62,8 @@
     <Reference Include="DualityPrimitives, Version=3.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\AdamsLair.Duality.Primitives.3.0.1\lib\portable45-net45+win8+wpa81\DualityPrimitives.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+    <Reference Include="Microsoft.Web.XmlTransform, Version=3.0.0.34420, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Xdt.3.0.0\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
     </Reference>
     <Reference Include="NuGet.Core, Version=2.14.0.832, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\NuGet.Core.2.14.0\lib\net40-Client\NuGet.Core.dll</HintPath>
@@ -87,6 +87,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
